@@ -40,3 +40,4 @@ def main():
 if __name__ == "__main__":
     result = main()
     print("✅ Application completed successfully!")
+print("Hello from Updated CI/CD Pipeline! 🎉")
