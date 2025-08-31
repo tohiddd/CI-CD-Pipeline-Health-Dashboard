@@ -4,6 +4,7 @@ A simple Hello World project with GitHub Actions to demonstrate CI/CD pipeline m
 
 ## 📦 What This Does
 
+
 - **Simple Python/Node.js application**
 - **GitHub Actions workflow** for CI/CD
 - **Automated testing** and building
