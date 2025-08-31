@@ -1,8 +1,0 @@
-# Python dependencies for Hello World CI/CD example
-# No external dependencies needed - uses only standard library
-# This file is here for demonstration purposes
-
-# For future enhancements you might add:
-# requests>=2.25.1
-# flask>=2.0.0
-# pytest>=6.0.0
