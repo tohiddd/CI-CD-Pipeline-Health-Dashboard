@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: cicd-db
+    environment:
+      POSTGRES_DB: cicd_dashboard
+      POSTGRES_USER: cicd_user
+      POSTGRES_PASSWORD: cicd_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - cicd-net
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: cicd-redis
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - cicd-net
+
+  # Backend API (Development mode with live reload)
+  backend:
+    image: node:18-alpine
+    container_name: cicd-backend
+    working_dir: /app
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://cicd_user:cicd_password@postgres:5432/cicd_dashboard
+      REDIS_URL: redis://redis:6379
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      JENKINS_URL: ${JENKINS_URL}
+      JENKINS_USERNAME: ${JENKINS_USERNAME}
+      JENKINS_API_TOKEN: ${JENKINS_API_TOKEN}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cicd-net
+    volumes:
+      - ./backend:/app
+    command: sh -c "npm install && npm run dev"
+
+  # Frontend React App (Development mode with live reload)
+  frontend:
+    image: node:18-alpine
+    container_name: cicd-frontend
+    working_dir: /app
+    environment:
+      REACT_APP_API_URL: http://localhost:3001
+      REACT_APP_WS_URL: ws://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - cicd-net
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm start"
+
+networks:
+  cicd-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

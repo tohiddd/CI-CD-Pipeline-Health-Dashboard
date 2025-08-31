@@ -1,0 +1,25 @@
+{
+  "name": "cicd-dashboard-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.0",
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "express-rate-limit": "^6.6.0",
+    "helmet": "^6.0.0",
+    "nodemailer": "^6.10.1",
+    "pg": "^8.8.0",
+    "redis": "^4.5.0",
+    "socket.io": "^4.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
