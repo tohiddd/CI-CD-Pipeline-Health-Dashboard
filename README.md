@@ -313,7 +313,7 @@ make logs      # View all service logs
 make clean     # Reset everything (removes data!)
 
 # Maintenance
-./update-github-token.sh NEW_TOKEN    # Update GitHub token
+# Update GitHub token - see Deployment.md for script
 docker system prune                   # Clean Docker cache
 ```
 
@@ -324,8 +324,8 @@ docker system prune                   # Clean Docker cache
 # Check GitHub token
 curl -H "Authorization: token YOUR_TOKEN" https://api.github.com/user
 
-# Update token if expired
-./update-github-token.sh NEW_TOKEN
+# Update token if expired (see script in Deployment.md)
+nano .env  # Edit GITHUB_TOKEN=your_new_token
 make restart
 ```
 
