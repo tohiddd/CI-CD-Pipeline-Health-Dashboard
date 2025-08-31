@@ -1,0 +1,163 @@
+name: 🧪 CI/CD Dashboard Test
+
+on:
+  # Trigger manually from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      test_scenario:
+        description: 'Test scenario to run'
+        required: true
+        default: 'success'
+        type: choice
+        options:
+          - success
+          - failure
+          - long_running
+  
+  # Trigger on push to main branch
+  push:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+  
+  # Trigger on pull requests
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  dashboard-test:
+    name: 🚀 Dashboard Pipeline Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🔧 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'backend/package-lock.json'
+        
+    - name: 📦 Install Dependencies
+      run: |
+        cd backend
+        npm ci
+        
+    - name: 🧪 Run Tests
+      run: |
+        echo "🧪 Running CI/CD Dashboard tests..."
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Author: ${{ github.actor }}"
+        echo "Workflow: ${{ github.workflow }}"
+        
+        # Test for intentional failure file
+        if [ -f "test-failure.js" ]; then
+          echo "🔥 Found test-failure.js - this will cause build to fail!"
+          echo "Testing dashboard failure detection..."
+          node test-failure.js || exit 1
+        else
+          echo "✅ No failure tests found - build should succeed"
+        fi
+        
+    - name: 📊 Test Scenario Handler
+      run: |
+        SCENARIO="${{ github.event.inputs.test_scenario || 'success' }}"
+        echo "🎯 Running test scenario: $SCENARIO"
+        
+        case $SCENARIO in
+          "success")
+            echo "✅ Success scenario - All tests passed!"
+            echo "This will show as a successful pipeline in your dashboard"
+            exit 0
+            ;;
+          "failure")
+            echo "❌ Failure scenario - Simulating test failure"
+            echo "This will trigger failure alerts in your dashboard"
+            echo "Testing alert notifications..."
+            exit 1
+            ;;
+          "long_running")
+            echo "⏳ Long running scenario - Simulating slow build"
+            echo "This will test build duration metrics"
+            for i in {1..30}; do
+              echo "Processing step $i/30..."
+              sleep 2
+            done
+            echo "✅ Long running test completed!"
+            ;;
+          *)
+            echo "✅ Default success case"
+            ;;
+        esac
+        
+    - name: 🎨 Generate Test Artifact
+      if: always()
+      run: |
+        mkdir -p test-results
+        cat > test-results/dashboard-test-report.txt << EOF
+        🧪 CI/CD Dashboard Test Report
+        ==============================
+        
+        Repository: ${{ github.repository }}
+        Workflow: ${{ github.workflow }}
+        Run ID: ${{ github.run_id }}
+        Branch: ${{ github.ref_name }}
+        Commit: ${{ github.sha }}
+        Author: ${{ github.actor }}
+        Timestamp: $(date)
+        Scenario: ${{ github.event.inputs.test_scenario || 'auto-trigger' }}
+        
+        Status: $(if [ "${{ job.status }}" = "success" ]; then echo "✅ SUCCESS"; else echo "❌ FAILED"; fi)
+        
+        This pipeline run should appear in your CI/CD Dashboard at:
+        http://localhost:3000
+        
+        Expected Dashboard Features:
+        - Pipeline status and metrics
+        - Build duration tracking  
+        - Success/failure rates
+        - Commit and author information
+        - Real-time updates via WebSocket
+        EOF
+        
+    - name: 📤 Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: dashboard-test-results-${{ github.run_id }}
+        path: test-results/
+        retention-days: 7
+        
+  notification-test:
+    name: 📱 Test Dashboard Detection
+    runs-on: ubuntu-latest
+    needs: dashboard-test
+    if: always()
+    
+    steps:
+    - name: 📊 Pipeline Summary
+      run: |
+        echo "🎯 CI/CD Dashboard Pipeline Test Summary"
+        echo "========================================"
+        echo ""
+        echo "✅ Pipeline executed successfully"
+        echo "📊 Status: ${{ needs.dashboard-test.result }}"
+        echo "🔄 This run should now be visible in your dashboard"
+        echo ""
+        echo "🌐 Check your dashboard at: http://localhost:3000"
+        echo "🔍 Look for:"
+        echo "  • New pipeline run entry"
+        echo "  • Updated success/failure metrics"  
+        echo "  • Build duration information"
+        echo "  • Real-time status updates"
+        echo ""
+        if [ "${{ needs.dashboard-test.result }}" = "failure" ]; then
+          echo "🚨 This was a failure test - check for alert notifications!"
+        else
+          echo "✅ This was a successful test run"
+        fi
