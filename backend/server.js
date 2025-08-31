@@ -836,7 +836,8 @@ async function fetchRepositoryRuns(fullName) {
 async function startDataFetching() {
   console.log('Starting periodic data fetching...');
   
-  setInterval(async () => {
+  // Function to fetch data
+  const fetchData = async () => {
     try {
       const repos = await db.query('SELECT full_name FROM repositories WHERE platform = $1', ['github']);
       
@@ -854,7 +855,14 @@ async function startDataFetching() {
     } catch (error) {
       console.error('Error in periodic data fetching:', error);
     }
-  }, 5 * 60 * 1000); // Every 5 minutes
+  };
+
+  // Fetch immediately on startup
+  console.log('🔄 Running initial data fetch...');
+  await fetchData();
+  
+  // Then set up periodic fetching every 60 seconds
+  setInterval(fetchData, 60 * 1000); // Every 60 seconds
 }
 
 // Initialize database tables
