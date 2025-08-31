@@ -4,6 +4,7 @@ A modern, containerized dashboard for monitoring GitHub Actions and Jenkins pipe
 
 ## Features
 
+
 - 📊 **Real-time Metrics**: Success/failure rates, build times, pipeline status
 - 🔍 **Detailed Logs**: View complete pipeline logs and job details
 - 🗂️ **Repository Management**: Add/remove repositories via web UI
