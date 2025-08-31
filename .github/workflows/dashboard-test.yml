@@ -1,4 +1,4 @@
-name: 🧪 CI/CD Dashboard Test
+name: 🚀 CI/CD Dashboard Build & Test
 
 on:
   # Trigger manually from GitHub Actions tab
@@ -55,13 +55,23 @@ jobs:
         echo "Author: ${{ github.actor }}"
         echo "Workflow: ${{ github.workflow }}"
         
-        # Test for intentional failure file
-        if [ -f "test-failure.js" ]; then
-          echo "🔥 Found test-failure.js - this will cause build to fail!"
-          echo "Testing dashboard failure detection..."
-          node test-failure.js || exit 1
+        # Validate essential dashboard files exist
+        echo "🔍 Checking dashboard structure..."
+        
+        if [ -f "backend/package.json" ] && [ -f "frontend/package.json" ]; then
+          echo "✅ Dashboard structure is valid"
         else
-          echo "✅ No failure tests found - build should succeed"
+          echo "❌ Missing essential dashboard files"
+          exit 1
+        fi
+        
+        # Test backend dependencies
+        echo "🔧 Validating backend configuration..."
+        if [ -f "backend/server.js" ]; then
+          echo "✅ Backend server found"
+        else
+          echo "❌ Backend server missing"
+          exit 1
         fi
         
     - name: 📊 Test Scenario Handler
