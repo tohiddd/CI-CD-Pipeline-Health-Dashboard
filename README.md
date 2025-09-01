@@ -6,7 +6,7 @@ A **complete, production-ready dashboard** that monitors your software building 
 
 **Think of it like a "health monitor" for your code** - just like a fitness tracker shows your heart rate, this dashboard shows if your software builds are healthy or need attention.
 
----
+----
 
 ## 🚀 Quick Start (5 Minutes to Running Dashboard)
 
