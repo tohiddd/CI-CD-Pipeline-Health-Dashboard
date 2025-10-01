@@ -74,6 +74,22 @@ jobs:
           exit 1
         fi
         
+        # Test JavaScript files for syntax errors
+        echo "🔍 Testing JavaScript files for syntax errors..."
+        if [ -f "test-failure.js" ]; then
+          echo "Found test-failure.js - running syntax check..."
+          node -c test-failure.js
+          if [ $? -ne 0 ]; then
+            echo "❌ JavaScript syntax error detected in test-failure.js"
+            echo "This is expected for testing pipeline failure scenarios"
+            exit 1
+          else
+            echo "✅ JavaScript syntax is valid"
+          fi
+        else
+          echo "ℹ️ No test-failure.js found - skipping syntax check"
+        fi
+        
     - name: 📊 Test Scenario Handler
       run: |
         SCENARIO="${{ github.event.inputs.test_scenario || 'success' }}"
