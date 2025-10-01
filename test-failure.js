@@ -1,18 +1,19 @@
-// Test file to trigger pipeline failure
-// This file contains intentional syntax errors
+// Test file for pipeline success
+// This file now has valid JavaScript syntax
 
-console.log("Hello from test pipeline failure!");
+console.log("Hello from test pipeline success!");
 
-// Intentional syntax error - missing closing parenthesis
+// Fixed syntax - proper function with closing parenthesis and brace
 function testFunction() {
-    console.log("This will cause a syntax error"
-    // Missing closing brace
+    console.log("This function now has valid syntax");
+    return "Success!";
 }
 
-// Another syntax error - invalid JavaScript
-const invalid = {
-    key: "value"
-    // Missing comma and closing brace
-}
+// Fixed syntax - proper object with comma and closing brace
+const validObject = {
+    key: "value",
+    status: "success"
+};
 
-console.log("This line should never be reached due to syntax errors");
+console.log("All syntax errors have been fixed!");
+console.log("Pipeline should now build successfully");
