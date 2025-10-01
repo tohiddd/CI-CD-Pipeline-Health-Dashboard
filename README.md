@@ -5,7 +5,6 @@
 A **complete, production-ready dashboard** that monitors your software building process (CI/CD pipelines) and tells you instantly when something breaks. Built entirely using **AI-assisted development** with Cursor, this project demonstrates how to create complex applications through iterative AI collaboration.
 
 **Think of it like a "health monitor" for your code** - just like a fitness tracker shows your heart rate, this dashboard shows if your software builds are healthy or need attention.
-
 ----
 
 ## 🚀 Quick Start (5 Minutes to Running Dashboard)
