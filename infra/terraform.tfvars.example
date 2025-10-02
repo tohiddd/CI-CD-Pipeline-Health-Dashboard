@@ -1,0 +1,56 @@
+# Example Terraform Variables File
+# Copy this file to terraform.tfvars and update with your actual values
+
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Project Configuration
+project_name = "cicd-dashboard"
+environment = "production"
+
+# EC2 Configuration
+instance_type = "t3.medium"
+key_pair_name = "your-key-pair-name"  # Replace with your AWS key pair name
+
+# Database Configuration
+create_database = true
+db_engine = "postgres"
+db_engine_version = "15.4"
+db_instance_class = "db.t3.micro"
+db_name = "cicd_dashboard"
+db_username = "cicd_user"
+db_password = "YourSecurePassword123!"  # Use a strong password
+
+# Docker Images (replace with your Docker Hub username)
+docker_image_backend = "your-dockerhub-username/cicd-dashboard-backend:latest"
+docker_image_frontend = "your-dockerhub-username/cicd-dashboard-frontend:latest"
+
+# Application Configuration
+github_token = "ghp_your_github_personal_access_token"
+jenkins_url = "https://your-jenkins.example.com"
+jenkins_username = "your-jenkins-username"
+jenkins_api_token = "your-jenkins-api-token"
+jwt_secret = "your-super-secret-jwt-key-change-this-in-production"
+
+# SMTP Configuration (optional - for email notifications)
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+smtp_user = "your-email@gmail.com"
+smtp_pass = "your-app-password"
+
+# Security Configuration
+allowed_ssh_cidr = ["YOUR.IP.ADDRESS.HERE/32"]  # Replace with your public IP
+allowed_http_cidr = ["0.0.0.0/0"]
+
+# Networking Configuration (optional - defaults are usually fine)
+# vpc_cidr = "10.0.0.0/16"
+# public_subnet_cidr = "10.0.1.0/24"
+# private_subnet_cidr = "10.0.2.0/24"
+
+# Tags
+tags = {
+  Project = "CI/CD Dashboard"
+  Environment = "production"
+  Owner = "your-name"
+  ManagedBy = "Terraform"
+}
